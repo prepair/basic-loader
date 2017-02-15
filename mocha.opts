@@ -1,0 +1,9 @@
+test/setup.js
+src/**/*.spec.js
+src/**/**/*.spec.js
+src/**/**/**/*.spec.js
+src/**/**/**/**/*.spec.js
+src/**/**/**/**/**/*.spec.js
+src/**/**/**/**/**/**/*.spec.js
+src/**/**/**/**/**/**/**/*.spec.js
+src/**/**/**/**/**/**/**/**/*.spec.js

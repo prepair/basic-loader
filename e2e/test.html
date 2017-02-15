@@ -1,0 +1,79 @@
+<html>
+<head>
+  <!-- https://mochajs.org/#running-mocha-in-the-browser -->
+  <meta charset="utf-8">
+  <title>Mocha Tests</title>
+  <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
+  <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+  <script src="https://cdn.rawgit.com/chaijs/chai/3.5.0/chai.js"></script>
+  <script src="https://cdn.rawgit.com/cujojs/curl/0.8.13/dist/curl/curl.js"></script>
+  <script src="https://cdn.rawgit.com/taylorhakes/promise-polyfill/6.0.2/promise.js"></script>
+</head>
+<body>
+  <div id="mocha"></div>
+
+  <div id="css-target"></div>
+
+  <script type="text/javascript">
+    curl.config({ baseUrl: "../lib" });
+    curl(['basic-loader-amd'], function (load) {
+
+      mocha.ui('bdd');
+      expect = chai.expect;
+
+      function getProp(elem, prop) {
+        return window.getComputedStyle(elem, null).getPropertyValue(prop);
+      }
+
+      describe('basic-loader', function () {
+
+        it('should load javascript files', function (done) {
+          expect(window.foo).to.be.undefined;
+          load.js('foo.js').then(function () {
+            expect(window.foo).to.be.true;
+            done();
+          });
+        });
+
+        it('should raise a promise error for non-existent javascript files', function (done) {
+          load.js('foo-missing.js').catch(function () {
+            done();
+          });
+        });
+
+        it('should load image files', function (done) {
+          expect(document.getElementsByTagName('IMG').length).to.equal(0); // empty breaks phantom
+          load.img('bar.png').then(function () {
+            expect(document.getElementsByTagName('IMG')).to.have.length(1);
+            done();
+          });
+        });
+
+        it('should raise a promise error for non-existent image files', function (done) {
+          load.img('bar-missing.png').catch(function () {
+            done();
+          });
+        });
+
+        it('should load css files', function (done) {
+          var target = document.getElementById('css-target');
+          expect(getProp(target, 'color')).to.equal('rgb(0, 0, 0)'); // phantom is terribly picky about props
+          load.css('baz.css').then(function () {
+            expect(getProp(target, 'color')).to.equal('rgb(255, 0, 0)');
+            done();
+          });
+        });
+
+        it('should raise a promise error for non-existent css files', function (done) {
+          load.img('baz-missing.css').catch(function () {
+            done();
+          });
+        });
+
+      });
+
+      mocha.run();
+    });
+  </script>
+</body>
+</html>
