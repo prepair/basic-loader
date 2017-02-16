@@ -37,7 +37,7 @@ Promise.all([
   this is caused by an old phantomjs version in the _mocha-phantomjs_ package.
   [Issue is here](https://github.com/nathanboktae/mocha-phantomjs/issues/248)
   * either wait for the upstream package to be updated 
-  * or update the binary manually
+  * or update the binary manually (inside node_modules)
 
 ## exposed test
 
