@@ -38,3 +38,8 @@ Promise.all([
   [Issue is here](https://github.com/nathanboktae/mocha-phantomjs/issues/248)
   * either wait for the upstream package to be updated 
   * or update the binary manually
+
+## exposed test
+
+Temporarily the e2e standalone test page has been exposed to [docs](./docs) and is made
+available as a github page. TODO: browserstack?
