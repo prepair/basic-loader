@@ -1,6 +1,6 @@
 {
   "name": "@prepair/basic-loader",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "David Walsh's super simple loader for loading image, CSS, and JavaScript files.",
   "main": "lib/basic-loader.js",
   "scripts": {
