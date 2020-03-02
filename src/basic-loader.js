@@ -1,4 +1,4 @@
-function _load(tag) {
+function _load (tag) {
   // attributes example: { 'data-test': 'new-attribute-here' }
   return function (url, attributes = {}) {
     // This promise will be used by Promise.all to determine success or failure
