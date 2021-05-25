@@ -9,9 +9,11 @@
     "test:watch": "npm t -- --watch --reporter min",
     "build": "shx rm -rf lib && babel src --ignore spec.js -d lib && babel -o lib/basic-loader-amd.js --plugins transform-es2015-modules-amd src/basic-loader.js",
     "publish-test": "shx rm -rf docs && mkdir docs && shx cp -r e2e/* docs/ && shx mv docs/test.html docs/index.html && shx cp lib/basic-loader-amd.js docs/basic-loader-amd.js && shx sed -i s/..\\/lib/.\\//g docs/index.html",
-    "precommit": "npm run lint",
-    "prepush": "npm test",
-    "release": "npm run build && git status --porcelain && git checkout master && git pull origin master && standard-version && git push --follow-tags origin master && npm publish --access=public"
+    "release": "npm run build && git status --porcelain && git checkout master && git pull origin master && standard-version && git push --follow-tags origin master && npm publish --access=public",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix"
   },
   "repository": {
     "type": "git",
@@ -43,7 +45,8 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-standard": "^5.0.0",
-    "husky": "0.13.1",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
     "mocha": "^8.4.0",
     "shx": "^0.3.3",
     "sinon": "^11.1.1",
