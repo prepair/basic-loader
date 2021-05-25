@@ -3,7 +3,7 @@ function _load (tag) {
   return function (url, attributes = {}) {
     // This promise will be used by Promise.all to determine success or failure
     return new Promise((resolve, reject) => {
-      let element = document.createElement(tag);
+      const element = document.createElement(tag);
       let parent = 'body';
       let attr = 'src';
 
