@@ -5,7 +5,7 @@
   "main": "lib/basic-loader.js",
   "scripts": {
     "lint": "eslint src",
-    "test": "cross-env NODE_ENV=test mocha --opts ./mocha.opts",
+    "test": "cross-env NODE_ENV=test mocha --exit 'src/**/*.spec.js'",
     "test:watch": "npm t -- --watch --reporter min",
     "build": "shx rm -rf lib && babel src --ignore spec.js -d lib && babel -o lib/basic-loader-amd.js --plugins transform-es2015-modules-amd src/basic-loader.js",
     "publish-test": "shx rm -rf docs && mkdir docs && shx cp -r e2e/* docs/ && shx mv docs/test.html docs/index.html && shx cp lib/basic-loader-amd.js docs/basic-loader-amd.js && shx sed -i s/..\\/lib/.\\//g docs/index.html",
@@ -34,7 +34,7 @@
     "babel-polyfill": "6.23.0",
     "babel-preset-es2015-ie": "6.6.2",
     "babel-preset-stage-0": "6.22.0",
-    "chai": "3.5.0",
+    "chai": "^4.3.4",
     "cross-env": "3.1.4",
     "eslint": "3.15.0",
     "eslint-config-semistandard": "7.0.0",
@@ -43,10 +43,11 @@
     "eslint-plugin-react": "6.9.0",
     "eslint-plugin-standard": "2.0.1",
     "husky": "0.13.1",
-    "mocha": "3.2.0",
+    "mocha": "^8.4.0",
     "shx": "0.2.2",
-    "sinon": "1.17.7",
-    "sinon-chai": "2.8.0",
+    "sinon": "^11.1.1",
+    "sinon-chai": "^3.7.0",
     "standard-version": "4.0.0"
-  }
+  },
+  "dependencies": {}
 }
