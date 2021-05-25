@@ -7,11 +7,10 @@
     "lint": "eslint src",
     "test": "cross-env NODE_ENV=test mocha --opts ./mocha.opts",
     "test:watch": "npm t -- --watch --reporter min",
-    "e2e": "mocha-phantomjs ./e2e/test.html --ignore-ssl-errors=true --ssl-protocol=any",
     "build": "shx rm -rf lib && babel src --ignore spec.js -d lib && babel -o lib/basic-loader-amd.js --plugins transform-es2015-modules-amd src/basic-loader.js",
     "publish-test": "shx rm -rf docs && mkdir docs && shx cp -r e2e/* docs/ && shx mv docs/test.html docs/index.html && shx cp lib/basic-loader-amd.js docs/basic-loader-amd.js && shx sed -i s/..\\/lib/.\\//g docs/index.html",
     "precommit": "npm run lint",
-    "prepush": "npm test && npm run e2e",
+    "prepush": "npm test",
     "release": "npm run build && git status --porcelain && git checkout master && git pull origin master && standard-version && git push --follow-tags origin master && npm publish --access=public"
   },
   "repository": {
@@ -47,7 +46,6 @@
     "gulp": "3.9.1",
     "husky": "0.13.1",
     "mocha": "3.2.0",
-    "mocha-phantomjs": "4.1.0",
     "shx": "0.2.2",
     "sinon": "1.17.7",
     "sinon-chai": "2.8.0",
