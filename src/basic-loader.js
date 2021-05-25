@@ -1,6 +1,6 @@
-function _load (tag) {
+const _load = (tag) => {
   // attributes example: { 'data-test': 'new-attribute-here' }
-  return function (url, attributes = {}) {
+  return (url, attributes = {}) => {
     // This promise will be used by Promise.all to determine success or failure
     return new Promise((resolve, reject) => {
       const element = document.createElement(tag);
@@ -23,18 +23,17 @@ function _load (tag) {
           parent = 'head';
       }
 
-      // Inject into document to kick off loading
       element[attr] = url;
-      Object.keys(attributes).forEach(key => {
-        element.setAttribute(key, attributes[key]);
-      });
+      Object.keys(attributes).forEach((name) => element.setAttribute(name, attributes[name]));
+
+      // Inject into document to kick off loading
       document[parent].appendChild(element);
     });
   };
-}
+};
 
 export default {
   css: _load('link'),
   js: _load('script'),
-  img: _load('img')
+  img: _load('img'),
 };
