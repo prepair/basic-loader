@@ -1,13 +1,10 @@
-require('babel-core/register')({ presets: ['es2015-ie'] });
-require('babel-polyfill');
+require("babel-core/register")({ presets: ["es2015-ie"] });
+require("babel-polyfill");
 
-const sinon = require('sinon');
-const mocha = require('mocha');
-const coMocha = require('co-mocha');
-const chai = require('chai');
-const sinonChai = require('sinon-chai');
+const sinon = require("sinon");
+const chai = require("chai");
+const sinonChai = require("sinon-chai");
 
-coMocha(mocha);
 chai.use(sinonChai);
 
 beforeEach(function () {
