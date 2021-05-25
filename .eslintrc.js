@@ -1,9 +1,10 @@
 module.exports = {
-  extends: 'semistandard',
+  extends: ['semistandard', 'prettier'],
+
   env: {
     node: true,
     browser: true,
-    mocha: true
+    mocha: true,
   },
 
   parserOptions: {
@@ -11,10 +12,10 @@ module.exports = {
     ecmaVersion: 2021,
     ecmaFeatures: {
       globalReturn: false,
-      jsx: false
+      jsx: false,
     },
-    sourceType: 'module'
+    sourceType: 'module',
   },
 
-  plugins: ['import', 'node', 'promise', 'standard']
+  plugins: ['import', 'node', 'promise', 'standard'],
 };
