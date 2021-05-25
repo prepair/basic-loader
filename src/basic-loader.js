@@ -33,8 +33,7 @@ function _load (tag) {
   };
 }
 
-// exporting a "default" would render the amd package to work differently
-module.exports = {
+export default {
   css: _load('link'),
   js: _load('script'),
   img: _load('img')

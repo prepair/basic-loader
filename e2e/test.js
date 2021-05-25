@@ -8,8 +8,8 @@ describe('basic-loader', function () {
   before(async () => {
     curl.config({ baseUrl: '../lib' });
     load = await new Promise((resolve) => {
-      curl(['basic-loader-amd'], (_load) => {
-        resolve(_load);
+      curl(['basic-loader-amd'], (module) => {
+        resolve(module.default);
       });
     });
   });
