@@ -1,35 +1,61 @@
+const BODY = 'body';
+const HEAD = 'head';
+
 const _load = (tag) => {
   // attributes example: { 'data-test': 'new-attribute-here' }
   return (url, attributes = {}) => {
-    // This promise will be used by Promise.all to determine success or failure
+    // this promise will be used by Promise.all to determine success or failure
     return new Promise((resolve, reject) => {
+      // need to set different attributes depending on tag type
+      const { parent, attributes: tagAttributes } = tagToTagDetailsFuncs[tag](url, attributes);
       const element = document.createElement(tag);
-      let parent = 'body';
-      let attr = 'src';
-
-      // Important success and error for the promise
       element.onload = () => resolve(url);
       element.onerror = () => reject(url); // maybe we should remove the broken node, who knows
-
-      // Need to set different attributes depending on tag type
-      switch (tag) {
-        case 'script':
-          element.async = true;
-          break;
-        case 'link':
-          element.type = 'text/css';
-          element.rel = 'stylesheet';
-          attr = 'href';
-          parent = 'head';
-      }
-
-      element[attr] = url;
-      Object.keys(attributes).forEach((name) => element.setAttribute(name, attributes[name]));
-
-      // Inject into document to kick off loading
+      Object.keys(tagAttributes).forEach((name) => element.setAttribute(name, tagAttributes[name]));
+      // inject into document to kick off loading
       document[parent].appendChild(element);
     });
   };
+};
+
+const getScriptTagDetails = (url, attributes) => {
+  const hasNoAsyncOrDefer = !('async' in attributes || 'defer' in attributes);
+  return {
+    parent: BODY,
+    attributes: {
+      src: url,
+      ...(hasNoAsyncOrDefer && { async: '' }),
+      ...attributes,
+    },
+  };
+};
+
+const getLinkTagDetails = (url, attributes) => {
+  return {
+    parent: HEAD,
+    attributes: {
+      href: url,
+      type: 'text/css',
+      rel: 'stylesheet',
+      ...attributes,
+    },
+  };
+};
+
+const getImgTagDetails = (url, attributes) => {
+  return {
+    parent: BODY,
+    attributes: {
+      src: url,
+      ...attributes,
+    },
+  };
+};
+
+const tagToTagDetailsFuncs = {
+  script: getScriptTagDetails,
+  link: getLinkTagDetails,
+  img: getImgTagDetails,
 };
 
 export default {

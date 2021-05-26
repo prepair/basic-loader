@@ -5,11 +5,10 @@ import load from './basic-loader';
 
 describe('basic-loader', () => {
   beforeEach(function () {
-    const getSpy = () => sinon.spy(() => ({}));
     global.document = {
-      body: { appendChild: getSpy() },
-      head: { appendChild: getSpy() },
-      createElement: getSpy()
+      body: { appendChild: sinon.fake() },
+      head: { appendChild: sinon.fake() },
+      createElement: sinon.fake.returns({ setAttribute: sinon.fake() }),
     };
   });
 
@@ -26,18 +25,89 @@ describe('basic-loader', () => {
   it('should return a promise for inserting css', () => {
     const result = load.css('foo.css');
     expect(result).to.be.an.instanceOf(Promise);
-    expect(document.head.appendChild).to.have.been.called;
   });
 
   it('should return a promise for inserting js', () => {
     const result = load.js('bar.js');
     expect(result).to.be.an.instanceOf(Promise);
-    expect(document.body.appendChild).to.have.been.called;
   });
 
   it('should return a promise for inserting images', () => {
     const result = load.img('baz.jpg');
     expect(result).to.be.an.instanceOf(Promise);
-    expect(document.body.appendChild).to.have.been.called;
+  });
+
+  it('should append <link> tag with default attributes for inserting css', () => {
+    load.css('foo.css');
+    expect(document.head.appendChild).to.have.been.calledOnce;
+    const element = document.head.appendChild.firstCall.args[0];
+    expect(element.setAttribute.args).to.eql([
+      ['href', 'foo.css'],
+      ['type', 'text/css'],
+      ['rel', 'stylesheet'],
+    ]);
+  });
+
+  it('should append <script> tag with default attributes for inserting js', () => {
+    load.js('bar.js');
+    expect(document.body.appendChild).to.have.been.calledOnce;
+    const element = document.body.appendChild.firstCall.args[0];
+    expect(element.setAttribute.args).to.eql([
+      ['src', 'bar.js'],
+      ['async', ''],
+    ]);
+  });
+
+  it('should append <img> tag with default attributes for inserting img', () => {
+    load.img('baz.jpg');
+    expect(document.body.appendChild).to.have.been.calledOnce;
+    const element = document.body.appendChild.firstCall.args[0];
+    expect(element.setAttribute.args).to.eql([['src', 'baz.jpg']]);
+  });
+
+  it('should add custom attributes for inserting css', () => {
+    load.css('foo.css', { dummy1: 'value1', dummy2: 'value2' });
+    expect(document.head.appendChild).to.have.been.calledOnce;
+    const element = document.head.appendChild.firstCall.args[0];
+    expect(element.setAttribute.args).to.eql([
+      ['href', 'foo.css'],
+      ['type', 'text/css'],
+      ['rel', 'stylesheet'],
+      ['dummy1', 'value1'],
+      ['dummy2', 'value2'],
+    ]);
+  });
+
+  it('should add custom attributes for inserting js', () => {
+    load.js('bar.js', { dummy1: 'value1', dummy2: 'value2' });
+    expect(document.body.appendChild).to.have.been.calledOnce;
+    const element = document.body.appendChild.firstCall.args[0];
+    expect(element.setAttribute.args).to.eql([
+      ['src', 'bar.js'],
+      ['async', ''],
+      ['dummy1', 'value1'],
+      ['dummy2', 'value2'],
+    ]);
+  });
+
+  it('should add custom attributes for inserting img', () => {
+    load.img('baz.jpg', { dummy1: 'value1', dummy2: 'value2' });
+    expect(document.body.appendChild).to.have.been.calledOnce;
+    const element = document.body.appendChild.firstCall.args[0];
+    expect(element.setAttribute.args).to.eql([
+      ['src', 'baz.jpg'],
+      ['dummy1', 'value1'],
+      ['dummy2', 'value2'],
+    ]);
+  });
+
+  it('should not add default `async` attribute when `defer` provided for inserting js', () => {
+    load.js('bar.js', { defer: '' });
+    expect(document.body.appendChild).to.have.been.calledOnce;
+    const element = document.body.appendChild.firstCall.args[0];
+    expect(element.setAttribute.args).to.eql([
+      ['src', 'bar.js'],
+      ['defer', ''],
+    ]);
   });
 });
