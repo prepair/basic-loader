@@ -9,6 +9,7 @@ describe('basic-loader', () => {
       body: { appendChild: sinon.fake() },
       head: { appendChild: sinon.fake() },
       createElement: sinon.fake.returns({ setAttribute: sinon.fake() }),
+      querySelector: sinon.stub(),
     };
   });
 
@@ -109,5 +110,41 @@ describe('basic-loader', () => {
       ['src', 'bar.js'],
       ['defer', ''],
     ]);
+  });
+
+  it('should not append <link> tag when already loaded for inserting css', () => {
+    global.document.querySelector.returns(true);
+    load.css('foo.css');
+    expect(document.head.appendChild).to.have.not.been.called;
+  });
+
+  it('should append <script> tag with default attributes for inserting js', () => {
+    global.document.querySelector.returns(true);
+    load.js('bar.js');
+    expect(document.body.appendChild).to.have.not.been.called;
+  });
+
+  it('should append <img> tag with default attributes for inserting img', () => {
+    global.document.querySelector.returns(true);
+    load.img('baz.jpg');
+    expect(document.body.appendChild).to.have.not.been.called;
+  });
+
+  it('should consider `rel` in already loaded check for inserting css', () => {
+    load.css('foo.css');
+    expect(global.document.querySelector).to.have.been.calledOnce;
+    expect(global.document.querySelector.firstCall.args).to.eql(['link[href="foo.css"][rel="stylesheet"]']);
+  });
+
+  it('should not include `rel` in already loaded check for inserting js', () => {
+    load.js('bar.js');
+    expect(global.document.querySelector).to.have.been.calledOnce;
+    expect(global.document.querySelector.firstCall.args).to.eql(['script[src="bar.js"]']);
+  });
+
+  it('should not include `rel` in already loaded check for inserting img', () => {
+    load.img('baz.jpg');
+    expect(global.document.querySelector).to.have.been.calledOnce;
+    expect(global.document.querySelector.firstCall.args).to.eql(['img[src="baz.jpg"]']);
   });
 });

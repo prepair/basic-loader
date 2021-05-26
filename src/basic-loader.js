@@ -1,6 +1,12 @@
 const BODY = 'body';
 const HEAD = 'head';
 
+const tagToUrlAttribute = {
+  script: 'src',
+  link: 'href',
+  img: 'src',
+};
+
 const _load = (tag) => {
   // attributes example: { 'data-test': 'new-attribute-here' }
   return (url, attributes = {}) => {
@@ -8,6 +14,8 @@ const _load = (tag) => {
     return new Promise((resolve, reject) => {
       // need to set different attributes depending on tag type
       const { parent, attributes: tagAttributes } = tagToTagDetailsFuncs[tag](url, attributes);
+      if (isAlreadyLoaded(tag, tagAttributes)) return resolve(url);
+
       const element = document.createElement(tag);
       element.onload = () => resolve(url);
       element.onerror = () => reject(url); // maybe we should remove the broken node, who knows
@@ -16,6 +24,17 @@ const _load = (tag) => {
       document[parent].appendChild(element);
     });
   };
+};
+
+const isAlreadyLoaded = (tag, attributes) => {
+  const urlAttribute = tagToUrlAttribute[tag];
+  const url = attributes[urlAttribute];
+  const rel = attributes.rel || '';
+
+  // script[src="some-url"]
+  // link[href="some-url"][rel="stylesheet"]
+  // img[src="some-url"]
+  return Boolean(document.querySelector(`${tag}[${urlAttribute}="${url}"]${rel ? `[rel="${rel}"]` : ''}`));
 };
 
 const getScriptTagDetails = (url, attributes) => {
